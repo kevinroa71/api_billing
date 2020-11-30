@@ -9,7 +9,7 @@ api_platform:
             jwt:
                 name: 'Authorization'
                 type: 'header'
-    title: 'Facturacion'
-    description: 'Servicio API REST para la gestión de facturación.'
+    title: 'Billing'
+    description: 'REST API service for billing management.'
     version: '1.0.0'
     show_webby: false
