@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Action\NotFoundAction;
@@ -51,7 +53,7 @@ class User implements UserInterface
      * @Assert\Email
      * @Assert\NotBlank
      * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string",length=180,unique=true)
      */
     protected $email;
 
@@ -91,7 +93,7 @@ class User implements UserInterface
      * @Assert\Length(max=100)
      * @Assert\NotBlank
      * @Groups({"read","write"})
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string",length=100)
      */
     protected $name;
 
@@ -105,6 +107,21 @@ class User implements UserInterface
      * @ORM\Column(type="string",length=20)
      */
     protected $phone;
+
+    /**
+     * User billings
+     *
+     * @ORM\OneToMany(targetEntity=Billing::class, mappedBy="user")
+     */
+    protected $billings;
+
+    /**
+     * Construction function
+     */
+    public function __construct()
+    {
+        $this->billings = new ArrayCollection();
+    }
 
     /**
      * Returns the user id
@@ -301,6 +318,52 @@ class User implements UserInterface
     public function setPhone(string $phone): self
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * Returns the user's billings
+     *
+     * @return Collection|Billing[]
+     */
+    public function getBillings(): Collection
+    {
+        return $this->billings;
+    }
+
+    /**
+     * Add a billing
+     *
+     * @param Billing $billing New billing
+     *
+     * @return self
+     */
+    public function addBilling(Billing $billing): self
+    {
+        if (!$this->billings->contains($billing)) {
+            $this->billings[] = $billing;
+            $billing->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Delete a billing
+     *
+     * @param Billing $billing billing
+     *
+     * @return self
+     */
+    public function removeBilling(Billing $billing): self
+    {
+        if ($this->billings->removeElement($billing)) {
+            // set the owning side to null (unless already changed)
+            if ($billing->getUser() === $this) {
+                $billing->setUser(null);
+            }
+        }
 
         return $this;
     }
