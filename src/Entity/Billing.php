@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BillingRepository;
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -115,11 +117,19 @@ class Billing
     protected $status = false;
 
     /**
+     * Payments made
+     *
+     * @ORM\OneToMany(targetEntity=Pay::class, mappedBy="billing")
+     */
+    protected $pays;
+
+    /**
      * Construction function
      */
     public function __construct()
     {
         $this->token = Uuid::uuid4();
+        $this->pays = new ArrayCollection();
     }
 
     /**
@@ -187,7 +197,7 @@ class Billing
      */
     public function getAmount(): ?float
     {
-        return $this->amount;
+        return round($this->amount, 2);
     }
 
     /**
@@ -211,7 +221,7 @@ class Billing
      */
     public function getDiscount(): ?float
     {
-        return $this->discount;
+        return round($this->discount, 2);
     }
 
     /**
@@ -235,7 +245,7 @@ class Billing
      */
     public function getTotal(): ?float
     {
-        return $this->total;
+        return round($this->total, 2);
     }
 
     /**
@@ -347,5 +357,65 @@ class Billing
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * Returns payments made
+     *
+     * @return Collection|Pay[]
+     */
+    public function getPays(): Collection
+    {
+        return $this->pays;
+    }
+
+    /**
+     * Add a payments made
+     *
+     * @param Pay $pay Payment
+     *
+     * @return self
+     */
+    public function addPay(Pay $pay): self
+    {
+        if (!$this->pays->contains($pay)) {
+            $this->pays[] = $pay;
+            $pay->setBilling($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a made payments
+     *
+     * @param Pay $pay Payment
+     *
+     * @return self
+     */
+    public function removePay(Pay $pay): self
+    {
+        if ($this->pays->removeElement($pay) && $pay->getBilling() === $this) {
+            $pay->setBilling(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the pending amount to pay
+     *
+     * @return float
+     */
+    public function getPending(): float
+    {
+        $pending = $this->getTotal();
+        foreach ($this->getPays() as $pay) {
+            if ($pay instanceof Pay) {
+                $pending = $pending - $pay->getAmount();
+            }
+        }
+
+        return round($pending, 2);
     }
 }

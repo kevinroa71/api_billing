@@ -1,0 +1,18 @@
+<h1>New Payment Link!</h1>
+
+<p>
+    You have a pending billing:
+</p>
+<ul>
+    <li><strong>Product / service:</strong> {{ billing.name }} {{ billing.description }}</li>
+    <li><strong>Amount:</strong> {{ billing.amount }}$</li>
+    <li><strong>Discount:</strong> {{ billing.discount }}%</li>
+</ul>
+
+<h3><strong>Total to pay: </strong> <u>{{ billing.total }}$</u></h3>
+
+<p>Please enter the following link to make the corresponding payment.</p>
+
+<p>
+    <a href="{{ url('pay', {id: billing.id}) }}?token={{ billing.token }}">Click here to pay</a>
+</p>

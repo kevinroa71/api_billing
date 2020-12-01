@@ -358,11 +358,10 @@ class User implements UserInterface
      */
     public function removeBilling(Billing $billing): self
     {
-        if ($this->billings->removeElement($billing)) {
-            // set the owning side to null (unless already changed)
-            if ($billing->getUser() === $this) {
-                $billing->setUser(null);
-            }
+        if ($this->billings->removeElement($billing)
+            && $billing->getUser() === $this
+        ) {
+            $billing->setUser(null);
         }
 
         return $this;
