@@ -79,6 +79,15 @@ final class SwaggerDecorator implements NormalizerInterface
             ],
         ];
 
+        $docs['components']['schemas']['Balance'] = [
+            'type' => 'object',
+            'properties' => [
+                'total' => [
+                    'type' => 'number'
+                ]
+            ],
+        ];
+
         $tokenDocumentation = [
             'paths' => [
                 '/login' => [
@@ -110,6 +119,28 @@ final class SwaggerDecorator implements NormalizerInterface
                         ],
                     ],
                 ],
+                '/balance' => [
+                    'get' => [
+                        'tags' => ['User'],
+                        'operationId' => 'getBalanceUser',
+                        'summary' => 'Get User Balance.',
+                        'requestBody' => [
+                            'description' => 'Get User Balance'
+                        ],
+                        'responses' => [
+                            Response::HTTP_OK => [
+                                'description' => 'Get User Balance',
+                                'content' => [
+                                    'application/json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Balance',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ]
+                ]
             ],
         ];
 

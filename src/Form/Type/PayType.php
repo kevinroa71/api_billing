@@ -23,7 +23,7 @@ class PayType extends AbstractType
     {
         $builder
             ->add('amount', NumberType::class)
-            ->add('save', SubmitType::class);
+            ->add('pay', SubmitType::class);
     }
 
     /**
