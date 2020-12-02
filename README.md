@@ -30,3 +30,8 @@ php project-dir/bin/console doctrine:migrations:migrate
 
 ### Configurar el servidor
 Ver [Configuracion de Referencia](https://symfony.com/doc/current/setup/web_server_configuration.html).
+
+### Documentacion de la Api bajo la ruta
+`https://api.domain.com/docs`
+
+![documentacion](https://i.imgur.com/NRLCdQS.png)
