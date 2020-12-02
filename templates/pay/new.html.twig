@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Payment{% endblock %}
+
+{% block body %}
+<h1>Payment</h1>
+<ul>
+    <li><strong>Product / service:</strong> {{ billing.name }} {{ billing.description }}</li>
+    <li><strong>Total:</strong> {{ billing.total }}$</li>
+</ul>
+<h4><strong>Pending to pay: </strong> <u>{{ billing.pending }}$</u></h4>
+<div>
+    {{ form(form) }}
+</div>
+{% endblock %}
